@@ -103,7 +103,7 @@ function createMap () {
             ....5.....77......5.7........ee.
             ..5.......55........e...5..72a..
             .................7..e7.....2ee..
-            ...7.777.....5..7e..ee....77ee7.
+            .a.7.777.....5..7e..ee....77ee7.
             772e2eee2777....ee22ee...7eeeee.
             eeeeeeeeeeee22eeeeeeee222eeeeee2
             `, TileScale.Sixteen)
@@ -111,7 +111,7 @@ function createMap () {
         scene.setTileMap(img`
             99..............................
             .......................e....5...
-            77....................e.........
+            ..a...................e.........
             eee.............5.....e..5..ee..
             .....................e.....2....
             ........5...........e.5..72.....
@@ -164,12 +164,12 @@ function createMap () {
             ..22222222
             .eeeeeeeee
             ........ee
-            .........e
-            eee.....5e
+            ee.......e
+            ..e.7...5e
             ........ee
-            ......2ee.
-            99.eee....
-            777.......
+            .......ee.
+            99.eee2...
+            777...e...
             `, TileScale.Sixteen)
     }
     scene.setTile(14, img`
@@ -291,7 +291,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.setAction(dino, ActionKind.walkingLeft)
 })
 scene.onHitTile(SpriteKind.Player, 10, function (sprite) {
-    if (Level == 2) {
+    if (Level == 3) {
         evaluateJumps()
     } else {
         Level += 1
