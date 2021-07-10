@@ -12,6 +12,7 @@ function setupLevel () {
     game.splash("Level " + Level)
     createMap()
     createEggs()
+    createDino()
     scene.placeOnRandomTile(dino, 9)
 }
 function createStandAnimation () {
@@ -221,12 +222,12 @@ function createMap () {
             .......................e....5...
             ......................e.........
             eee.............5.....e..5..ee..
-            ........5............e.....2....
-            ....................e.5..72.....
-            ........2.........e2....2.......
-            ......5.72ee.....7....77.......7
-            ......e.e.....5........5....a.2.
-            22222ee2e22222e222222e77222272..
+            .....................e.....2....
+            ........5...........e.5..72.....
+            ..................e2....2.......
+            ......5.7277.....7....77.......7
+            ......e.eeee..5........5....a.2.
+            22222ee2eeee22ee22222e77222272..
             `)
     }
 }
@@ -240,9 +241,8 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.setAction(dino, ActionKind.walkingLeft)
 })
 scene.onHitTile(SpriteKind.Player, 10, function (sprite) {
-    evaluateJumps()
     if (Level == 2) {
-        game.over(true)
+        evaluateJumps()
     } else {
         Level += 1
         setupLevel()
@@ -503,8 +503,6 @@ let animStandRight: animation.Animation = null
 let dino: Sprite = null
 let Level = 0
 Level = 1
-createMap()
-createDino()
-createEggs()
+setupLevel()
 info.setScore(0)
 info.setLife(3)
