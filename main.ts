@@ -91,11 +91,11 @@ function createMap () {
         99..............................
         ................55...........5..
         ..............2255..........e7..
-        ............ee7777......7....e..
+        ............ee7777......77...e..
         ....5.....77......5.7........ee.
         ..5.......55........e...5...2a..
-        .................7..e7.....7ee7.
-        ...7.777.....5..7e..ee.....7eee.
+        .................7..e7.....7ee..
+        ...7.777.....5..7e..ee....77ee7.
         772e2eee2777....ee22ee...7eeeee.
         eeeeeeeeeeee22eeeeeeee222eeeeee2
         `, TileScale.Sixteen)
@@ -209,7 +209,6 @@ function createMap () {
         `, false)
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    dino.vy = -140
     if (dino.isHittingTile(CollisionDirection.Bottom)) {
         dino.vy = -140
     }
@@ -219,7 +218,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.setAction(dino, ActionKind.walkingLeft)
 })
 scene.onHitTile(SpriteKind.Player, 10, function (sprite) {
-    if (jumpNumber < 14) {
+    if (jumpNumber < 15) {
         game.splash("Excellent!")
         pause(200)
         game.splash("You only jumped " + jumpNumber + " times!", "")
@@ -421,6 +420,8 @@ function createEggs () {
 }
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.setAction(dino, ActionKind.walkingRight)
+    scene.placeOnRandomTile(dino, 9)
+    music.powerDown.play()
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     info.changeScoreBy(1)
@@ -448,14 +449,14 @@ function createDino () {
         `, SpriteKind.Player)
     controller.moveSprite(dino, 50, 0)
     dino.ay = 290
-    scene.placeOnRandomTile(dino, 9)
     scene.cameraFollowSprite(dino)
+    scene.placeOnRandomTile(dino, 9)
     createStandAnimation()
     createWalkingAnimation()
     animation.setAction(dino, ActionKind.standingRight)
 }
 scene.onHitTile(SpriteKind.Player, 2, function (sprite) {
-    game.over(false)
+    info.changeLifeBy(-1)
 })
 let Egg: Sprite = null
 let tile_list: tiles.Tile[] = []
@@ -465,7 +466,8 @@ let jumpNumber = 0
 let dino: Sprite = null
 let animStandLeft: animation.Animation = null
 let animStandRight: animation.Animation = null
-createDino()
 createMap()
+createDino()
 createEggs()
 info.setScore(0)
+info.setLife(3)
