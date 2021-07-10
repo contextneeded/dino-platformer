@@ -12,7 +12,6 @@ function setupLevel () {
     game.splash("Level " + Level)
     createMap()
     createEggs()
-    createDino()
     scene.placeOnRandomTile(dino, 9)
 }
 function createStandAnimation () {
@@ -95,6 +94,33 @@ function createStandAnimation () {
 }
 function createMap () {
     scene.setBackgroundColor(9)
+    if (Level == 1) {
+        scene.setTileMap(img`
+            99..............................
+            ................55...........5..
+            ..............2255..........e7..
+            ............ee7777......77...e..
+            ....5.....77......5.7........ee.
+            ..5.......55........e...5..72a..
+            .................7..e7.....2ee..
+            .a.7.777.....5..7e..ee....77ee7.
+            772e2eee2777....ee22ee...7eeeee.
+            eeeeeeeeeeee22eeeeeeee222eeeeee2
+            `, TileScale.Sixteen)
+    } else {
+        scene.setTileMap(img`
+            99..............................
+            .......................e....5...
+            77....................e.........
+            eee.............5.....e..5..ee..
+            .....................e.....2....
+            ........5...........e.5..72.....
+            ..................e2....2.......
+            ......5.727......7....77.......7
+            ......e.eee...5........5....a.2.
+            22222ee2eee222ee22222e77222272..
+            `, TileScale.Sixteen)
+    }
     scene.setTile(14, img`
         . . . . d . . . . d . e . . d 9 
         . . e e d . . . . d . . e . d . 
@@ -203,33 +229,6 @@ function createMap () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, false)
-    if (Level == 1) {
-        scene.setTileMap(img`
-            99..............................
-            ................55...........5..
-            ..............2255..........e7..
-            ............ee7777......77...e..
-            ....5.....77......5.7........ee.
-            ..5.......55........e...5..72a..
-            .................7..e7.....2ee..
-            ...7.777.....5..7e..ee....77ee7.
-            772e2eee2777....ee22ee...7eeeee.
-            eeeeeeeeeeee22eeeeeeee222eeeeee2
-            `, TileScale.Sixteen)
-    } else {
-        scene.setTileMap(img`
-            99..............................
-            .......................e....5...
-            ......................e.........
-            eee.............5.....e..5..ee..
-            .....................e.....2....
-            ........5...........e.5..72.....
-            ..................e2....2.......
-            ......5.727......7....77.......7
-            ......e.eee...5........5....a.2.
-            22222ee2eee222ee22222e77222272..
-            `)
-    }
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (dino.isHittingTile(CollisionDirection.Bottom)) {
@@ -438,7 +437,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.setAction(dino, ActionKind.walkingRight)
 })
 function evaluateJumps () {
-    if (jumpNumber < 15) {
+    if (jumpNumber < 25) {
         game.splash("Excellent!")
         pause(200)
         game.splash("You only jumped " + jumpNumber + " times!", "")
@@ -504,5 +503,6 @@ let dino: Sprite = null
 let Level = 0
 Level = 1
 setupLevel()
+createDino()
 info.setScore(0)
 info.setLife(3)
