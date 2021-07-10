@@ -8,7 +8,7 @@ enum ActionKind {
     walkingRight
 }
 function createStandAnimation () {
-    animStandRight = animation.createAnimation(ActionKind.Walking, 200)
+    animStandRight = animation.createAnimation(ActionKind.standingRight, 200)
     animStandRight.addAnimationFrame(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . c c c c . . . . 
@@ -45,7 +45,7 @@ function createStandAnimation () {
         . . . c c b 5 5 c c c b b c . . 
         . . . . . c 5 5 d c c c c c . . 
         `)
-    animStandLeft = animation.createAnimation(ActionKind.Walking, 200)
+    animStandLeft = animation.createAnimation(ActionKind.standingLeft, 200)
     animStandLeft.addAnimationFrame(img`
         . . . . . . . . . . . . . . . . 
         . . . . c c c c . . . . . . . . 
@@ -88,14 +88,16 @@ function createStandAnimation () {
 function createMap () {
     scene.setBackgroundColor(9)
     scene.setTileMap(img`
-        9 9 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 
-        . . . . 5 . . . . . . . . . . . . . 5 . 7 . . . . . . . . . e 7 
-        . . 5 . . . . . . . 5 5 . . . . . . . . e . . . 5 . . . 7 . . e 
-        . . . . . . . . . . . . . . . . . 7 . . e 7 . . . . . . e . . . 
-        . . . 7 . 7 7 7 . . . . . 5 . . 7 e . . e e . . . . . 7 e . . . 
-        7 7 2 e 2 e e e 2 7 7 7 . . . . e e 2 2 e e . . . 7 e e e 2 e a 
-        e e e e e e e e e e e e 2 2 e e e e e e e e 2 2 2 e e e e e e e 
+        99..............................
+        ................55...........5..
+        ..............2255..........e7..
+        ............ee7777......7....e..
+        ....5.....77......5.7........ee.
+        ..5.......55........e...5...2a..
+        .................7..e7.....7ee7.
+        ...7.777.....5..7e..ee.....7eee.
+        772e2eee2777....ee22ee...7eeeee.
+        eeeeeeeeeeee22eeeeeeee222eeeeee2
         `, TileScale.Sixteen)
     scene.setTile(14, img`
         . . . . d . . . . d . e . . d 9 
@@ -211,21 +213,34 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (dino.isHittingTile(CollisionDirection.Bottom)) {
         dino.vy = -140
     }
+    jumpNumber += 1
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
-    animation.setAction(dino, ActionKind.Walking)
+    animation.setAction(dino, ActionKind.walkingLeft)
 })
 scene.onHitTile(SpriteKind.Player, 10, function (sprite) {
-    game.over(true)
+    if (jumpNumber < 14) {
+        game.splash("Excellent!")
+        pause(200)
+        game.splash("You only jumped " + jumpNumber + " times!", "")
+        pause(600)
+        game.over(true, effects.starField)
+    } else {
+        game.splash("meh...")
+        pause(200)
+        game.splash("You jumped " + jumpNumber + " times", "")
+        pause(600)
+        game.over(true, effects.dissolve)
+    }
 })
 controller.right.onEvent(ControllerButtonEvent.Released, function () {
-    animation.setAction(dino, ActionKind.Walking)
+    animation.setAction(dino, ActionKind.standingRight)
 })
 controller.left.onEvent(ControllerButtonEvent.Released, function () {
-    animation.setAction(dino, ActionKind.Walking)
+    animation.setAction(dino, ActionKind.standingLeft)
 })
 function createWalkingAnimation () {
-    animWalkLeft = animation.createAnimation(ActionKind.Walking, 100)
+    animWalkLeft = animation.createAnimation(ActionKind.walkingLeft, 100)
     animWalkLeft.addAnimationFrame(img`
         . . . . . . . . . . . . . . . . 
         . . . . c c c c . . . . . . . . 
@@ -298,7 +313,7 @@ function createWalkingAnimation () {
         . . . c b c c b 5 5 b c c c . . 
         . . . c c c d 5 5 b c . . . . . 
         `)
-    animWalkRight = animation.createAnimation(ActionKind.Walking, 100)
+    animWalkRight = animation.createAnimation(ActionKind.walkingRight, 100)
     animWalkRight.addAnimationFrame(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . c c c c . . . . 
@@ -405,7 +420,7 @@ function createEggs () {
     }
 }
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
-    animation.setAction(dino, ActionKind.Walking)
+    animation.setAction(dino, ActionKind.walkingRight)
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     info.changeScoreBy(1)
@@ -437,7 +452,7 @@ function createDino () {
     scene.cameraFollowSprite(dino)
     createStandAnimation()
     createWalkingAnimation()
-    animation.setAction(dino, ActionKind.Walking)
+    animation.setAction(dino, ActionKind.standingRight)
 }
 scene.onHitTile(SpriteKind.Player, 2, function (sprite) {
     game.over(false)
@@ -446,6 +461,7 @@ let Egg: Sprite = null
 let tile_list: tiles.Tile[] = []
 let animWalkRight: animation.Animation = null
 let animWalkLeft: animation.Animation = null
+let jumpNumber = 0
 let dino: Sprite = null
 let animStandLeft: animation.Animation = null
 let animStandRight: animation.Animation = null
