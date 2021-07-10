@@ -7,6 +7,13 @@ enum ActionKind {
     walkingLeft,
     walkingRight
 }
+function setupLevel () {
+    clearLevel()
+    game.splash("Level " + Level)
+    createMap()
+    createEggs()
+    scene.placeOnRandomTile(dino, 9)
+}
 function createStandAnimation () {
     animStandRight = animation.createAnimation(ActionKind.standingRight, 200)
     animStandRight.addAnimationFrame(img`
@@ -87,18 +94,6 @@ function createStandAnimation () {
 }
 function createMap () {
     scene.setBackgroundColor(9)
-    scene.setTileMap(img`
-        99..............................
-        ................55...........5..
-        ..............2255..........e7..
-        ............ee7777......77...e..
-        ....5.....77......5.7........ee.
-        ..5.......55........e...5...2a..
-        .................7..e7.....7ee..
-        ...7.777.....5..7e..ee....77ee7.
-        772e2eee2777....ee22ee...7eeeee.
-        eeeeeeeeeeee22eeeeeeee222eeeeee2
-        `, TileScale.Sixteen)
     scene.setTile(14, img`
         . . . . d . . . . d . e . . d 9 
         . . e e d . . . . d . . e . d . 
@@ -207,6 +202,33 @@ function createMap () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, false)
+    if (Level == 1) {
+        scene.setTileMap(img`
+            99..............................
+            ................55...........5..
+            ..............2255..........e7..
+            ............ee7777......77...e..
+            ....5.....77......5.7........ee.
+            ..5.......55........e...5..72a..
+            .................7..e7.....2ee..
+            ...7.777.....5..7e..ee....77ee7.
+            772e2eee2777....ee22ee...7eeeee.
+            eeeeeeeeeeee22eeeeeeee222eeeeee2
+            `, TileScale.Sixteen)
+    } else {
+        scene.setTileMap(img`
+            99..............................
+            .......................e....5...
+            ......................e.........
+            eee.............5.....e..5..ee..
+            ........5............e.....2....
+            ....................e.5..72.....
+            ........2.........e2....2.......
+            ......5.72ee.....7....77.......7
+            ......e.e.....5........5....a.2.
+            22222ee2e22222e222222e77222272..
+            `)
+    }
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (dino.isHittingTile(CollisionDirection.Bottom)) {
@@ -218,18 +240,12 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.setAction(dino, ActionKind.walkingLeft)
 })
 scene.onHitTile(SpriteKind.Player, 10, function (sprite) {
-    if (jumpNumber < 15) {
-        game.splash("Excellent!")
-        pause(200)
-        game.splash("You only jumped " + jumpNumber + " times!", "")
-        pause(600)
-        game.over(true, effects.starField)
+    evaluateJumps()
+    if (Level == 2) {
+        game.over(true)
     } else {
-        game.splash("meh...")
-        pause(200)
-        game.splash("You jumped " + jumpNumber + " times", "")
-        pause(600)
-        game.over(true, effects.dissolve)
+        Level += 1
+        setupLevel()
     }
 })
 controller.right.onEvent(ControllerButtonEvent.Released, function () {
@@ -420,14 +436,32 @@ function createEggs () {
 }
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.setAction(dino, ActionKind.walkingRight)
-    scene.placeOnRandomTile(dino, 9)
-    music.powerDown.play()
 })
+function evaluateJumps () {
+    if (jumpNumber < 15) {
+        game.splash("Excellent!")
+        pause(200)
+        game.splash("You only jumped " + jumpNumber + " times!", "")
+        pause(600)
+        game.over(true, effects.starField)
+    } else {
+        game.splash("meh...")
+        pause(200)
+        game.splash("You jumped " + jumpNumber + " times", "")
+        pause(600)
+        game.over(true, effects.dissolve)
+    }
+}
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     info.changeScoreBy(1)
     otherSprite.destroy()
     music.jumpUp.play()
 })
+function clearLevel () {
+    for (let value of sprites.allOfKind(SpriteKind.Food)) {
+        value.destroy()
+    }
+}
 function createDino () {
     dino = sprites.create(img`
         . . . . . . . . . . . . . . . . 
@@ -450,22 +484,25 @@ function createDino () {
     controller.moveSprite(dino, 50, 0)
     dino.ay = 290
     scene.cameraFollowSprite(dino)
-    scene.placeOnRandomTile(dino, 9)
     createStandAnimation()
     createWalkingAnimation()
     animation.setAction(dino, ActionKind.standingRight)
 }
 scene.onHitTile(SpriteKind.Player, 2, function (sprite) {
     info.changeLifeBy(-1)
+    scene.placeOnRandomTile(dino, 9)
+    music.powerDown.play()
 })
 let Egg: Sprite = null
 let tile_list: tiles.Tile[] = []
 let animWalkRight: animation.Animation = null
 let animWalkLeft: animation.Animation = null
 let jumpNumber = 0
-let dino: Sprite = null
 let animStandLeft: animation.Animation = null
 let animStandRight: animation.Animation = null
+let dino: Sprite = null
+let Level = 0
+Level = 1
 createMap()
 createDino()
 createEggs()
