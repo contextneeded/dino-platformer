@@ -118,7 +118,7 @@ function createMap () {
             ..................e2....2.......
             ......5.727......7.7..77.......7
             ......e.eee...5........5....a.2.
-            22222ee2eee222ee22227e77222272..
+            22222ee2eee22eee22227e77222272..
             `, TileScale.Sixteen)
     } else {
         scene.setTileMap(img`
@@ -488,7 +488,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.setAction(dino, ActionKind.walkingRight)
 })
 function evaluateJumps () {
-    if (jumpNumber < 75) {
+    if (jumpNumber < 95) {
         game.splash("Excellent!")
         pause(200)
         game.splash("You only jumped " + jumpNumber + " times!", "")
