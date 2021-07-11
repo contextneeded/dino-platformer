@@ -103,7 +103,7 @@ function createMap () {
             ....5.....77......5.7........ee.
             ..5.......55........e...5..72a..
             .................7..e7.....2ee..
-            .a.7.777.....5..7e..ee....77ee7.
+            ...7.777.....5..7e..ee....77ee7.
             772e2eee2777....ee22ee...7eeeee.
             eeeeeeeeeeee22eeeeeeee222eeeeee2
             `, TileScale.Sixteen)
@@ -111,7 +111,7 @@ function createMap () {
         scene.setTileMap(img`
             99..............................
             .......................e....5...
-            ..a...................e.........
+            ......................e.........
             eee.............5.....e..5..ee..
             .....................e.....2....
             ........5...........e.5..72.....
@@ -124,17 +124,17 @@ function createMap () {
         scene.setTileMap(img`
             5.........
             7.........
-            ....7.....
-            ..7...ee..
+            ..........
+            ..7..eee..
             ...22.....
-            ee.ee222..
-            ...eaeeee.
-            ..7e......
-            ...e......
-            e..e77277.
-            e.....e..2
+            ee.ee222.5
+            ...ea7.7e5
+            ..7e.....5
+            ...e....5.
+            e...77..7.
+            e........2
             ee.......e
-            .ee2e....e
+            .e2ee....e
             .5...e...e
             ........5e
             ..eee...ee
@@ -488,7 +488,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.setAction(dino, ActionKind.walkingRight)
 })
 function evaluateJumps () {
-    if (jumpNumber < 40) {
+    if (jumpNumber < 75) {
         game.splash("Excellent!")
         pause(200)
         game.splash("You only jumped " + jumpNumber + " times!", "")
